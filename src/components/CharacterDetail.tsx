@@ -20,10 +20,10 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
     code: string;
     label: string;
   }> = [
-    { key: 'idea', icon: <Lightbulb size={18} />, code: 'SEC-01', label: 'IDEA' },
-    { key: 'pm', icon: <Wrench size={18} />, code: 'SEC-02', label: 'PM' },
-    { key: 'improvement', icon: <TrendingUp size={18} />, code: 'SEC-03', label: 'IMPROVEMENT' },
-    { key: 'safety', icon: <ShieldCheck size={18} />, code: 'SEC-04', label: 'SAFETY' },
+    { key: 'idea', icon: <Lightbulb size={17} />, code: 'SEC-01', label: 'IDEA' },
+    { key: 'pm', icon: <Wrench size={17} />, code: 'SEC-02', label: 'PM' },
+    { key: 'improvement', icon: <TrendingUp size={17} />, code: 'SEC-03', label: 'IMPROVEMENT' },
+    { key: 'safety', icon: <ShieldCheck size={17} />, code: 'SEC-04', label: 'SAFETY' },
   ];
 
   const currentCategoryData = character.categories[activeCategory];
@@ -34,7 +34,7 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
       {/* Top Detail Navigation Header */}
       <div className="detail-header-bar">
@@ -43,58 +43,56 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
           className="return-button"
           onClick={onBackToShowroom}
         >
-          <ArrowLeft size={15} />
+          <ArrowLeft size={14} />
           <span>RETURN TO SHOWROOM</span>
         </button>
 
         <div className="detail-header-id">
           <span className="detail-code-badge">{character.code}</span>
           <span className="detail-header-title">
-            {character.name} // {character.zone}
+            {character.name} <span className="detail-header-sep">//</span> {character.zone}
           </span>
         </div>
       </div>
 
-      {/* Main 2-Column Split: Character Spotlight (Left) & Category Content (Right) */}
+      {/* Main 2-Column Split / Responsive Flow */}
       <div className="detail-body-layout">
         {/* Left Column: Character Spotlight */}
         <aside className="detail-character-spotlight">
-          <div>
-            <div className="spotlight-card">
-              <img
-                src={character.image}
-                alt={character.name}
-                className="spotlight-photo"
-              />
-              <div className="spotlight-overlay" />
-              <div className="spotlight-info-wrap">
-                <span className="spotlight-division">
-                  {character.department} • {character.unit}
-                </span>
-                <h2 className="spotlight-name">{character.name}</h2>
-              </div>
+          <div className="spotlight-card">
+            <img
+              src={character.image}
+              alt={character.name}
+              className="spotlight-photo"
+            />
+            <div className="spotlight-overlay" />
+            <div className="spotlight-info-wrap">
+              <span className="spotlight-division">
+                {character.department} • {character.unit}
+              </span>
+              <h2 className="spotlight-name">{character.name}</h2>
             </div>
+          </div>
 
-            {/* Standardized Meta Data Structure */}
-            <div className="spotlight-meta-block">
-              <div className="meta-row">
-                <span className="meta-key">DESIGNATION CODE</span>
-                <span className="meta-val">{character.code}</span>
-              </div>
-              <div className="meta-row">
-                <span className="meta-key">TEAM / ASSIGNMENT</span>
-                <span className="meta-val">{character.department}</span>
-              </div>
-              <div className="meta-row">
-                <span className="meta-key">SECURITY ZONE</span>
-                <span className="meta-val">{character.zone}</span>
-              </div>
-              <div className="meta-row">
-                <span className="meta-key">PROFILE STATUS</span>
-                <span className="meta-val" style={{ color: '#059669' }}>
-                  {character.status}
-                </span>
-              </div>
+          {/* Standardized Meta Data Structure */}
+          <div className="spotlight-meta-block">
+            <div className="meta-row">
+              <span className="meta-key">DESIGNATION CODE</span>
+              <span className="meta-val">{character.code}</span>
+            </div>
+            <div className="meta-row">
+              <span className="meta-key">TEAM / ASSIGNMENT</span>
+              <span className="meta-val">{character.department}</span>
+            </div>
+            <div className="meta-row">
+              <span className="meta-key">SECURITY ZONE</span>
+              <span className="meta-val">{character.zone}</span>
+            </div>
+            <div className="meta-row">
+              <span className="meta-key">PROFILE STATUS</span>
+              <span className="meta-val meta-status-active">
+                {character.status}
+              </span>
             </div>
           </div>
         </aside>
@@ -112,9 +110,9 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                   className={`category-tab-btn ${isActive ? 'active' : ''}`}
                   onClick={() => setActiveCategory(cat.key)}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div className="tab-top-row">
                     <span className="tab-code">{cat.code}</span>
-                    <span style={{ color: isActive ? '#ff5500' : '#7c8599' }}>
+                    <span className="tab-icon-wrap">
                       {cat.icon}
                     </span>
                   </div>
@@ -129,13 +127,13 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
             <motion.div
               key={currentCategoryData.id}
               className="category-panel"
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="panel-header-card">
-                <div>
+                <div className="panel-header-info">
                   <div className="panel-tagline">
                     {currentCategoryData.code} // {currentCategoryData.tagline}
                   </div>
@@ -143,7 +141,7 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                   <p className="panel-desc">{currentCategoryData.description}</p>
                 </div>
                 <div className="panel-status-badge">
-                  <FileText size={13} />
+                  <FileText size={12} />
                   <span>{currentCategoryData.status}</span>
                 </div>
               </div>
@@ -164,7 +162,7 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                 {/* Structured Next Phase Ready Notice */}
                 <div className="ready-notice-box">
                   <div className="ready-icon-wrap">
-                    <CheckCircle2 size={20} />
+                    <CheckCircle2 size={18} />
                   </div>
                   <div className="ready-notice-text">
                     <span className="ready-notice-title">
