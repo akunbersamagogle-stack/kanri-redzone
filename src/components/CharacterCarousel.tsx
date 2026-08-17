@@ -17,8 +17,17 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
   onSelectCharacter,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [viewportWidth, setViewportWidth] = useState<number>(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const total = characters.length;
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Realtime drag motion value: representing index offset
   const dragOffset = useMotionValue(0);
@@ -124,8 +133,11 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
           // Render only within 5-position spatial window (-2 to +2)
           if (Math.abs(logicalOffset) > 2) return null;
 
-          // Compute target 3D spatial values
-          let x = logicalOffset * 320;
+          // Compute target 3D spatial values with responsive scaling
+          const step1 = Math.min(Math.max(viewportWidth * 0.22, 210), 320);
+          const step2 = Math.min(Math.max(viewportWidth * 0.40, 380), 580);
+
+          let x = 0;
           let scale = 1.0;
           let rotateY = 0;
           let opacity = 1.0;
@@ -133,24 +145,25 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
           let zIndex = 30;
 
           if (logicalOffset === 0) {
-            scale = isHovered ? 1.025 : 1.0;
+            x = 0;
+            scale = isHovered ? 1.03 : 1.0;
             opacity = 1.0;
             rotateY = 0;
             blur = 0;
             zIndex = 30;
           } else if (Math.abs(logicalOffset) === 1) {
-            x = logicalOffset * 360;
-            scale = isHovered ? 0.90 : 0.84;
+            x = logicalOffset * step1;
+            scale = isHovered ? 0.88 : 0.82;
             rotateY = logicalOffset * -8;
             opacity = isHovered ? 0.92 : 0.72;
-            blur = isHovered ? 0 : 1.2;
+            blur = isHovered ? 0 : 1;
             zIndex = 20;
           } else if (Math.abs(logicalOffset) === 2) {
-            x = logicalOffset * 620;
-            scale = isHovered ? 0.76 : 0.68;
+            x = logicalOffset * step2;
+            scale = isHovered ? 0.74 : 0.64;
             rotateY = logicalOffset * -14;
-            opacity = isHovered ? 0.65 : 0.38;
-            blur = isHovered ? 1 : 3.0;
+            opacity = isHovered ? 0.62 : 0.35;
+            blur = isHovered ? 1 : 2.5;
             zIndex = 10;
           }
 
