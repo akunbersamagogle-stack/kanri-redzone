@@ -69,34 +69,61 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeIndex, total, characters, onSelectCharacter, goToNext, goToPrev]);
 
-  // Mouse & Touch Drag Handlers for direct continuous tracking
+  // Native touch swipe detection optimized for mobile devices
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const isSwipingRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    isSwipingRef.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isSwipingRef.current) return;
+    isSwipingRef.current = false;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+
+    // Prioritize horizontal swipe over vertical scroll
+    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    }
+  };
+
+  // Mouse drag handler for desktop
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    if (e.pointerType === 'touch') return; // Handled natively by touch events for maximum 120fps smoothness
+    if (e.button !== 0) return;
     isDraggingRef.current = true;
     dragStartXRef.current = e.clientX;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch (_) {}
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDraggingRef.current) return;
+    if (e.pointerType === 'touch' || !isDraggingRef.current) return;
     const deltaX = e.clientX - dragStartXRef.current;
-    const offset = deltaX / 350;
-    dragOffset.set(offset);
+    dragOffset.set(deltaX / 350);
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    if (!isDraggingRef.current) return;
+    if (e.pointerType === 'touch' || !isDraggingRef.current) return;
     isDraggingRef.current = false;
     try {
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
     } catch (_) {}
 
     const currentOffset = dragOffset.get();
-    const threshold = 0.22;
-
-    if (currentOffset > threshold) {
+    if (currentOffset > 0.2) {
       goToPrev();
-    } else if (currentOffset < -threshold) {
+    } else if (currentOffset < -0.2) {
       goToNext();
     }
 
@@ -115,10 +142,14 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
     return diff;
   };
 
+  const isMobile = viewportWidth < 768;
+
   return (
     <div
       ref={containerRef}
       className="carousel-stage"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
@@ -131,17 +162,16 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
           const isHovered = hoveredIndex === index;
 
           // Render only within 5-position spatial window (-2 to +2)
-          if (Math.abs(logicalOffset) > 2) return null;
+          if (Math.abs(logicalOffset) > (isMobile ? 1 : 2)) return null;
 
           // Compute target 3D spatial values with responsive scaling
-          const step1 = Math.min(Math.max(viewportWidth * 0.22, 210), 320);
+          const step1 = isMobile ? Math.min(viewportWidth * 0.72, 260) : Math.min(Math.max(viewportWidth * 0.22, 210), 320);
           const step2 = Math.min(Math.max(viewportWidth * 0.40, 380), 580);
 
           let x = 0;
           let scale = 1.0;
           let rotateY = 0;
           let opacity = 1.0;
-          let blur = 0;
           let zIndex = 30;
 
           if (logicalOffset === 0) {
@@ -149,21 +179,18 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
             scale = isHovered ? 1.03 : 1.0;
             opacity = 1.0;
             rotateY = 0;
-            blur = 0;
             zIndex = 30;
           } else if (Math.abs(logicalOffset) === 1) {
             x = logicalOffset * step1;
-            scale = isHovered ? 0.88 : 0.82;
-            rotateY = logicalOffset * -8;
-            opacity = isHovered ? 0.92 : 0.72;
-            blur = isHovered ? 0 : 1;
+            scale = isMobile ? 0.78 : (isHovered ? 0.88 : 0.82);
+            rotateY = isMobile ? 0 : logicalOffset * -8;
+            opacity = isMobile ? 0.45 : (isHovered ? 0.92 : 0.72);
             zIndex = 20;
           } else if (Math.abs(logicalOffset) === 2) {
             x = logicalOffset * step2;
             scale = isHovered ? 0.74 : 0.64;
             rotateY = logicalOffset * -14;
             opacity = isHovered ? 0.62 : 0.35;
-            blur = isHovered ? 1 : 2.5;
             zIndex = 10;
           }
 
@@ -176,14 +203,13 @@ export const CharacterCarousel: React.FC<CharacterCarouselProps> = ({
                 scale,
                 rotateY,
                 opacity,
-                filter: `blur(${blur}px)`,
                 zIndex,
               }}
               transition={{
                 type: 'spring',
-                stiffness: 320,
-                damping: 32,
-                mass: 0.9,
+                stiffness: isMobile ? 420 : 320,
+                damping: isMobile ? 36 : 32,
+                mass: isMobile ? 0.6 : 0.9,
               }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
