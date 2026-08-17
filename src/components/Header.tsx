@@ -19,7 +19,7 @@ export const Header: React.FC = () => {
       <div className="header-telemetry">
         <div className="telemetry-item">
           <span className="telemetry-label">FACILITY</span>
-          <span className="telemetry-val">BODY #2 // PLANT 1</span>
+          <span className="telemetry-val">BODY #2 // PLANT 2</span>
         </div>
         <div className="telemetry-item">
           <span className="telemetry-label">SYSTEM STATUS</span>
