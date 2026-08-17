@@ -97,20 +97,22 @@ html, body, #root {
   object-fit: cover;
   object-position: center;
   opacity: 0;
-  transition: opacity 1.2s ease-in-out;
+  transition: opacity 1s ease-in-out;
   pointer-events: none;
   z-index: 0;
 }
 
 .showroom-video-bg.loaded {
-  opacity: 0.38; /* Soft ambient visibility while maintaining card clarity */
+  opacity: 0.88; /* Clearly visible, vivid & cinematic */
 }
 
-/* High Contrast Video Tint Overlay */
+/* High Contrast Video Tint & Vignette Overlay */
 .showroom-video-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.65) 0%, rgba(244, 246, 249, 0.82) 55%, rgba(233, 236, 242, 0.94) 100%);
+  background: 
+    radial-gradient(circle at 50% 35%, rgba(10, 14, 23, 0.28) 0%, rgba(10, 14, 23, 0.55) 65%, rgba(5, 8, 15, 0.82) 100%),
+    linear-gradient(to top, rgba(10, 14, 23, 0.7) 0%, transparent 40%);
   pointer-events: none;
   z-index: 1;
 }
@@ -123,8 +125,9 @@ html, body, #root {
   transform: translateX(-50%);
   width: 85vw;
   height: 70vh;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 45%, transparent 75%);
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 45%, transparent 75%);
   filter: blur(50px);
+  z-index: 2;
 }
 
 /* Warm Neutral Ambient & Subtle Orange Rim Beams */
@@ -134,8 +137,9 @@ html, body, #root {
   left: -10%;
   width: 50vw;
   height: 65vh;
-  background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.045) 0%, transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.08) 0%, transparent 65%);
   filter: blur(60px);
+  z-index: 2;
 }
 
 .showroom-accent-beam-right {
@@ -144,8 +148,9 @@ html, body, #root {
   right: -10%;
   width: 50vw;
   height: 65vh;
-  background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.035) 0%, transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(245, 158, 11, 0.06) 0%, transparent 65%);
   filter: blur(60px);
+  z-index: 2;
 }
 
 /* Polished Concrete Floor & Subtle Perspective Grid */
@@ -154,12 +159,13 @@ html, body, #root {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 46%;
+  height: 42%;
   background: 
-    radial-gradient(ellipse 70% 45% at 50% 95%, rgba(255, 85, 0, 0.04) 0%, transparent 65%),
-    linear-gradient(to top, rgba(226, 231, 239, 0.9) 0%, rgba(244, 246, 249, 0.4) 50%, transparent 100%);
+    radial-gradient(ellipse 70% 45% at 50% 95%, rgba(255, 85, 0, 0.12) 0%, transparent 65%),
+    linear-gradient(to top, rgba(10, 14, 23, 0.65) 0%, transparent 100%);
   perspective: 700px;
   transform-style: preserve-3d;
+  z-index: 2;
 }
 
 .showroom-grid {
@@ -167,12 +173,12 @@ html, body, #root {
   inset: 0;
   background-size: 80px 80px;
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   transform: rotateX(68deg) translateZ(0);
   transform-origin: bottom center;
-  mask-image: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 80%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 80%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 80%);
 }
 
 /* Soft Pedestal Reflection under Hero Center */
@@ -183,7 +189,7 @@ html, body, #root {
   transform: translateX(-50%);
   width: 560px;
   height: 60px;
-  background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.12) 0%, rgba(255, 85, 0, 0.03) 45%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.22) 0%, rgba(255, 85, 0, 0.06) 45%, transparent 70%);
   border-radius: 50%;
   filter: blur(12px);
 }
@@ -197,8 +203,9 @@ html, body, #root {
   display: flex;
   justify-content: space-between;
   padding: 0 4vw;
-  opacity: 0.35;
+  opacity: 0.55;
   pointer-events: none;
+  z-index: 3;
 }
 
 .showroom-wall-code {
@@ -206,7 +213,7 @@ html, body, #root {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: var(--text-muted);
+  color: #cbd5e1;
 }
 
 /* ==========================================================================
@@ -219,9 +226,10 @@ html, body, #root {
   transform: translateX(-50%);
   width: 75vw;
   height: 44vh;
-  background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.15) 0%, rgba(255, 100, 20, 0.05) 50%, transparent 72%);
+  background: radial-gradient(ellipse at center, rgba(255, 85, 0, 0.25) 0%, rgba(255, 100, 20, 0.08) 50%, transparent 72%);
   filter: blur(55px);
   pointer-events: none;
+  z-index: 3;
   animation: ambient-center-pulse 5.5s infinite ease-in-out alternate;
 }
 
@@ -246,12 +254,12 @@ html, body, #root {
   align-items: center;
   gap: 10px;
   padding: 4px 18px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(255, 85, 0, 0.35);
+  background: rgba(10, 14, 23, 0.75);
+  border: 1px solid rgba(255, 85, 0, 0.5);
   border-radius: 999px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(255, 85, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px rgba(255, 85, 0, 0.2), 0 0 10px rgba(255, 85, 0, 0.15);
 }
 
 .sign-indicator-dot {
@@ -268,8 +276,8 @@ html, body, #root {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.24em;
-  color: #ff5500;
-  text-shadow: 0 0 10px rgba(255, 85, 0, 0.4);
+  color: #ff6a1a;
+  text-shadow: 0 0 12px rgba(255, 85, 0, 0.7);
 }
 
 .glowing-neon-title {
@@ -277,7 +285,7 @@ html, body, #root {
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #12151c;
+  color: #ffffff;
   margin: 0;
   line-height: 1.1;
   font-family: var(--font-main);
@@ -292,8 +300,8 @@ html, body, #root {
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: var(--text-muted);
-  opacity: 0.8;
+  color: #94a3b8;
+  opacity: 0.95;
 }
 
 .glowing-sign-bullet {
@@ -302,69 +310,75 @@ html, body, #root {
 
 @keyframes neon-flicker-glow {
   0%, 100% {
-    color: #11141c;
+    color: #ffffff;
     text-shadow: 
-      0 0 10px rgba(255, 85, 0, 0.85),
-      0 0 24px rgba(255, 85, 0, 0.65),
-      0 0 50px rgba(255, 85, 0, 0.4),
-      0 0 90px rgba(255, 60, 0, 0.25);
+      0 0 4px #ffffff,
+      0 0 12px rgba(255, 85, 0, 0.95),
+      0 0 28px rgba(255, 85, 0, 0.85),
+      0 0 55px rgba(255, 85, 0, 0.65),
+      0 0 95px rgba(255, 60, 0, 0.45);
   }
   38% {
-    color: #11141c;
+    color: #ffffff;
     text-shadow: 
-      0 0 14px rgba(255, 85, 0, 0.95),
-      0 0 32px rgba(255, 85, 0, 0.75),
-      0 0 65px rgba(255, 85, 0, 0.5),
-      0 0 110px rgba(255, 60, 0, 0.3);
+      0 0 6px #ffffff,
+      0 0 16px rgba(255, 85, 0, 1),
+      0 0 36px rgba(255, 85, 0, 0.95),
+      0 0 70px rgba(255, 85, 0, 0.75),
+      0 0 120px rgba(255, 60, 0, 0.55);
   }
   40% {
     /* Flicker OFF */
-    color: #8b95a5;
+    color: #64748b;
     text-shadow: none;
     opacity: 0.35;
   }
   42% {
     /* Flicker ON */
-    color: #11141c;
+    color: #ffffff;
     text-shadow: 
-      0 0 8px rgba(255, 85, 0, 0.7),
-      0 0 18px rgba(255, 85, 0, 0.5);
+      0 0 4px #ffffff,
+      0 0 10px rgba(255, 85, 0, 0.8),
+      0 0 22px rgba(255, 85, 0, 0.6);
     opacity: 1;
   }
   44% {
     /* Flicker OFF */
-    color: #8b95a5;
+    color: #64748b;
     text-shadow: none;
     opacity: 0.3;
   }
   46% {
     /* Stabilize ON */
-    color: #11141c;
+    color: #ffffff;
     text-shadow: 
-      0 0 12px rgba(255, 85, 0, 0.9),
-      0 0 28px rgba(255, 85, 0, 0.7),
-      0 0 55px rgba(255, 85, 0, 0.45),
-      0 0 95px rgba(255, 60, 0, 0.28);
+      0 0 4px #ffffff,
+      0 0 14px rgba(255, 85, 0, 0.95),
+      0 0 32px rgba(255, 85, 0, 0.85),
+      0 0 60px rgba(255, 85, 0, 0.65),
+      0 0 100px rgba(255, 60, 0, 0.45);
     opacity: 1;
   }
   86% {
-    color: #11141c;
+    color: #ffffff;
     text-shadow: 
-      0 0 12px rgba(255, 85, 0, 0.9),
-      0 0 28px rgba(255, 85, 0, 0.7),
-      0 0 55px rgba(255, 85, 0, 0.45);
+      0 0 4px #ffffff,
+      0 0 14px rgba(255, 85, 0, 0.95),
+      0 0 32px rgba(255, 85, 0, 0.85),
+      0 0 60px rgba(255, 85, 0, 0.65);
   }
   88% {
     /* Quick subtle blip */
     opacity: 0.5;
-    text-shadow: 0 0 5px rgba(255, 85, 0, 0.3);
+    text-shadow: 0 0 8px rgba(255, 85, 0, 0.4);
   }
   90% {
     opacity: 1;
     text-shadow: 
-      0 0 12px rgba(255, 85, 0, 0.9),
-      0 0 28px rgba(255, 85, 0, 0.7),
-      0 0 55px rgba(255, 85, 0, 0.45);
+      0 0 4px #ffffff,
+      0 0 14px rgba(255, 85, 0, 0.95),
+      0 0 32px rgba(255, 85, 0, 0.85),
+      0 0 60px rgba(255, 85, 0, 0.65);
   }
 }
 
@@ -398,10 +412,10 @@ html, body, #root {
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0) 100%);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  background: linear-gradient(to bottom, rgba(10, 14, 23, 0.8) 0%, rgba(10, 14, 23, 0) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .header-brand {
@@ -415,8 +429,8 @@ html, body, #root {
   align-items: center;
   gap: 6px;
   padding: 5px 10px;
-  background: var(--accent-orange-subtle);
-  border: 1px solid rgba(255, 85, 0, 0.25);
+  background: rgba(255, 85, 0, 0.15);
+  border: 1px solid rgba(255, 85, 0, 0.4);
   border-radius: var(--radius-sm);
 }
 
@@ -433,7 +447,7 @@ html, body, #root {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
-  color: var(--accent-orange);
+  color: #ff6a1a;
 }
 
 .brand-title-wrap {
@@ -445,7 +459,7 @@ html, body, #root {
   font-size: 15px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: var(--text-primary);
+  color: #ffffff;
   text-transform: uppercase;
 }
 
@@ -454,7 +468,7 @@ html, body, #root {
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 0.16em;
-  color: var(--text-muted);
+  color: #94a3b8;
   text-transform: uppercase;
 }
 
@@ -475,7 +489,7 @@ html, body, #root {
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--text-dim);
+  color: #64748b;
   text-transform: uppercase;
 }
 
@@ -484,7 +498,7 @@ html, body, #root {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--text-secondary);
+  color: #e2e8f0;
 }
 
 .telemetry-live {
@@ -856,7 +870,7 @@ html, body, #root {
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(to top, rgba(10, 14, 23, 0.75) 0%, rgba(10, 14, 23, 0) 100%);
   pointer-events: none;
 }
 
@@ -868,7 +882,7 @@ html, body, #root {
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: #94a3b8;
   text-transform: uppercase;
 }
 
@@ -877,10 +891,10 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   padding: 2px 7px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 4px;
-  color: var(--text-secondary);
+  color: #ffffff;
   font-weight: 700;
   box-shadow: var(--shadow-sm);
 }
@@ -896,14 +910,14 @@ html, body, #root {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.25);
   border: none;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .indicator-dot:hover {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .indicator-dot.active {
@@ -916,9 +930,9 @@ html, body, #root {
 .footer-credits {
   font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.16em;
-  color: var(--text-dim);
+  color: #94a3b8;
   text-transform: uppercase;
 }
 
