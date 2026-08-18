@@ -334,12 +334,12 @@ export default function App() {
         ))}
       </div>
 
-      {/* 6. Main 3D Card Carousel */}
+      {/* 6. Main 3D Card Carousel (16:9 Ratio Format) */}
       <div
         style={{
           position: 'relative',
           width: '100%',
-          height: 'clamp(390px, 62vh, 540px)',
+          height: 'clamp(360px, 58vh, 520px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -379,16 +379,15 @@ export default function App() {
           if (abs > 2) return null;
 
           const isCenter = offset === 0;
-          const xPct = offset * 54;
-          const scale = isCenter ? 1 : 0.73 - abs * 0.04;
+          const xPct = offset * 66;
+          const scale = isCenter ? 1 : 0.76 - abs * 0.05;
           const zIdx = isCenter ? 10 : 5 - abs;
           const rotX = isCenter ? tilt.y : 0;
           const rotY = (offset * -14) + (isCenter ? tilt.x : 0);
-          const opacity = isCenter ? 1 : 0.58 - abs * 0.12;
+          const opacity = isCenter ? 1 : 0.55 - abs * 0.12;
           const blur = isCenter ? 0 : abs * 2;
 
-          const cardW = 'clamp(230px, 27vw, 330px)';
-          const cardH = '100%';
+          const cardW = 'clamp(320px, 46vw, 640px)';
 
           return (
             <div
@@ -402,8 +401,8 @@ export default function App() {
               style={{
                 position: 'absolute',
                 width: cardW,
-                height: cardH,
-                borderRadius: 24,
+                aspectRatio: '16 / 9',
+                borderRadius: 22,
                 overflow: 'hidden',
                 transform: `translateX(${xPct}%) scale(${scale}) rotateX(${rotX}deg) rotateY(${rotY}deg)`,
                 transformOrigin: 'center center',
@@ -454,7 +453,7 @@ export default function App() {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: 'center top',
+                  objectPosition: 'center center',
                   display: 'block',
                   pointerEvents: 'none',
                   zIndex: 0,
@@ -476,7 +475,7 @@ export default function App() {
                   inset: 0,
                   zIndex: 2,
                   pointerEvents: 'none',
-                  background: 'linear-gradient(to bottom, rgba(10,14,23,0.15) 0%, transparent 35%, rgba(6,9,16,0.92) 85%, rgba(6,9,16,0.98) 100%)',
+                  background: 'linear-gradient(to bottom, rgba(10,14,23,0.1) 0%, transparent 40%, rgba(6,9,16,0.82) 80%, rgba(6,9,16,0.98) 100%)',
                 }}
               />
 
@@ -487,7 +486,7 @@ export default function App() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 16,
+                      top: 14,
                       left: 16,
                       right: 16,
                       zIndex: 10,
@@ -510,9 +509,9 @@ export default function App() {
                         WebkitBackdropFilter: 'blur(12px)',
                         border: '1px solid rgba(255,85,0,0.4)',
                         borderRadius: 999,
-                        padding: '6px 14px',
+                        padding: '5px 12px',
                         color: '#ffffff',
-                        fontSize: 11.5,
+                        fontSize: 11,
                         fontWeight: 700,
                         letterSpacing: '0.08em',
                         cursor: 'pointer',
@@ -533,8 +532,8 @@ export default function App() {
                         background: 'rgba(16,185,129,0.18)',
                         border: '1px solid rgba(16,185,129,0.4)',
                         borderRadius: 999,
-                        padding: '4px 10px',
-                        fontSize: 10,
+                        padding: '3px 9px',
+                        fontSize: 9.5,
                         fontFamily: 'var(--font-mono)',
                         color: '#10b981',
                         fontWeight: 700,
@@ -558,13 +557,13 @@ export default function App() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 56,
+                      top: 48,
                       left: 16,
                       background: 'rgba(255,85,0,0.18)',
                       border: '1px solid rgba(255,85,0,0.45)',
                       borderRadius: 999,
-                      padding: '3px 10px',
-                      fontSize: 10.5,
+                      padding: '2px 8px',
+                      fontSize: 10,
                       fontFamily: 'var(--font-mono)',
                       color: '#ff6a1a',
                       fontWeight: 700,
@@ -578,9 +577,9 @@ export default function App() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 58,
+                      top: 50,
                       right: 16,
-                      fontSize: 11,
+                      fontSize: 10.5,
                       fontFamily: 'var(--font-mono)',
                       color: 'rgba(255,255,255,0.6)',
                       fontWeight: 700,
@@ -597,18 +596,18 @@ export default function App() {
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      padding: '0 20px 22px',
+                      padding: '0 18px 16px',
                     }}
                   >
                     <div
                       style={{
                         fontFamily: 'var(--font-mono)',
-                        fontSize: 10,
+                        fontSize: 9.5,
                         fontWeight: 700,
                         color: '#ff6a1a',
                         letterSpacing: '0.14em',
                         textTransform: 'uppercase',
-                        marginBottom: 4,
+                        marginBottom: 3,
                       }}
                     >
                       {char.department} • {char.unit}
@@ -617,9 +616,9 @@ export default function App() {
                     <h2
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 'clamp(20px, 3.2vw, 26px)',
+                        fontSize: 'clamp(18px, 2.4vw, 23px)',
                         fontWeight: 900,
-                        margin: '0 0 8px',
+                        margin: '0 0 4px',
                         color: '#ffffff',
                         lineHeight: 1.15,
                         textTransform: 'uppercase',
@@ -632,10 +631,14 @@ export default function App() {
                     <p
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 12,
-                        lineHeight: 1.55,
+                        fontSize: 11.5,
+                        lineHeight: 1.45,
                         color: 'rgba(255,255,255,0.72)',
-                        margin: '0 0 12px',
+                        margin: '0 0 8px',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
                       }}
                     >
                       {char.summary}
@@ -647,7 +650,7 @@ export default function App() {
                         alignItems: 'center',
                         gap: 6,
                         color: '#ffd080',
-                        fontSize: 10.5,
+                        fontSize: 10,
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 600,
                       }}
