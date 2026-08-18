@@ -589,25 +589,32 @@ export default function App() {
                     {active + 1} / {total}
                   </div>
 
-                  {/* Bottom Character Info */}
+                  {/* Bottom Character Info with High Contrast Glass Backdrop */}
                   <div
                     style={{
                       position: 'absolute',
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      padding: '0 18px 16px',
+                      zIndex: 10,
+                      padding: '24px 20px 18px',
+                      background: 'linear-gradient(to top, rgba(5,7,14,0.96) 0%, rgba(5,7,14,0.85) 60%, rgba(5,7,14,0.4) 85%, transparent 100%)',
+                      backdropFilter: 'blur(4px)',
+                      WebkitBackdropFilter: 'blur(4px)',
+                      borderBottomLeftRadius: 22,
+                      borderBottomRightRadius: 22,
                     }}
                   >
                     <div
                       style={{
                         fontFamily: 'var(--font-mono)',
-                        fontSize: 9.5,
-                        fontWeight: 700,
+                        fontSize: 10.5,
+                        fontWeight: 800,
                         color: '#ff6a1a',
-                        letterSpacing: '0.14em',
+                        letterSpacing: '0.15em',
                         textTransform: 'uppercase',
-                        marginBottom: 3,
+                        marginBottom: 4,
+                        textShadow: '0 2px 8px rgba(0,0,0,0.9)',
                       }}
                     >
                       {char.department} • {char.unit}
@@ -616,13 +623,14 @@ export default function App() {
                     <h2
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 'clamp(18px, 2.4vw, 23px)',
+                        fontSize: 'clamp(20px, 2.8vw, 26px)',
                         fontWeight: 900,
-                        margin: '0 0 4px',
+                        margin: '0 0 6px',
                         color: '#ffffff',
                         lineHeight: 1.15,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.02em',
+                        letterSpacing: '0.03em',
+                        textShadow: '0 2px 14px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.8)',
                       }}
                     >
                       {char.name}
@@ -631,14 +639,16 @@ export default function App() {
                     <p
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 11.5,
-                        lineHeight: 1.45,
-                        color: 'rgba(255,255,255,0.72)',
-                        margin: '0 0 8px',
+                        fontSize: 12,
+                        lineHeight: 1.5,
+                        color: '#f1f5f9',
+                        fontWeight: 500,
+                        margin: '0 0 10px',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
+                        textShadow: '0 1px 8px rgba(0,0,0,0.9)',
                       }}
                     >
                       {char.summary}
@@ -646,13 +656,18 @@ export default function App() {
 
                     <div
                       style={{
-                        display: 'flex',
+                        display: 'inline-flex',
                         alignItems: 'center',
                         gap: 6,
                         color: '#ffd080',
-                        fontSize: 10,
+                        fontSize: 11,
                         fontFamily: 'var(--font-mono)',
-                        fontWeight: 600,
+                        fontWeight: 700,
+                        background: 'rgba(255,85,0,0.2)',
+                        border: '1px solid rgba(255,85,0,0.45)',
+                        borderRadius: 999,
+                        padding: '4px 12px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
                       }}
                     >
                       <PinIcon />
@@ -662,38 +677,48 @@ export default function App() {
                 </>
               )}
 
-              {/* Side Cards Preview Label */}
+              {/* Side Cards Preview Label with High Contrast Glass Backdrop */}
               {!isCenter && (
                 <div
                   style={{
                     position: 'absolute',
-                    bottom: 16,
-                    left: 14,
-                    right: 14,
+                    bottom: 12,
+                    left: 12,
+                    right: 12,
+                    zIndex: 10,
+                    padding: '10px 14px',
+                    background: 'rgba(8, 12, 22, 0.88)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderRadius: 14,
+                    boxShadow: '0 6px 18px rgba(0,0,0,0.5)',
                   }}
                 >
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: 9.5,
-                      fontWeight: 700,
+                      fontSize: 10,
+                      fontWeight: 800,
                       color: '#ff6a1a',
-                      letterSpacing: '0.1em',
+                      letterSpacing: '0.12em',
                       textTransform: 'uppercase',
                       marginBottom: 2,
                     }}
                   >
-                    {char.code}
+                    CODE: {char.code}
                   </div>
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: 13,
+                      fontSize: 13.5,
                       fontWeight: 800,
-                      color: 'rgba(255,255,255,0.95)',
+                      color: '#ffffff',
                       textTransform: 'uppercase',
                       marginBottom: 2,
                       lineHeight: 1.2,
+                      letterSpacing: '0.02em',
+                      textShadow: '0 2px 8px rgba(0,0,0,0.8)',
                     }}
                   >
                     {char.name}
@@ -702,7 +727,8 @@ export default function App() {
                     style={{
                       fontFamily: 'var(--font-mono)',
                       fontSize: 10,
-                      color: 'rgba(255,255,255,0.5)',
+                      color: '#ffd080',
+                      fontWeight: 600,
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
