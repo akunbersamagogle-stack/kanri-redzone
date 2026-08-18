@@ -54,6 +54,9 @@ export default function App() {
   const [liked, setLiked] = useState<Set<number>>(new Set());
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  // Tracks whether the active card's character video has loaded and is ready to play
+  const [activeVideoReady, setActiveVideoReady] = useState(false);
+  const activeVideoRef = useRef<HTMLVideoElement>(null);
 
   // Responsive device detection
   const [viewportWidth, setViewportWidth] = useState<number>(
@@ -107,6 +110,13 @@ export default function App() {
       img.src = char.image;
     });
   }, [characters]);
+
+  // Reset video-ready state each time the active card changes
+  // This ensures the photo is shown first, then video cross-fades in once loaded
+  useEffect(() => {
+    setActiveVideoReady(false);
+  }, [active]);
+
 
   // Keyboard navigation
   const onKeyDown = useCallback((e: KeyboardEvent) => {
@@ -350,16 +360,18 @@ export default function App() {
                 background: '#0e1422',
               }}
             >
-              {/* Optional Future Loop Video (Auto-switches if MP4 is provided) */}
+              {/* Character Video — auto-plays only on the active center card.
+                  Sits below the photo (zIndex 1) and fades in once ready. */}
               {isCenter && (
                 <video
+                  ref={activeVideoRef}
+                  key={char.id}
                   autoPlay
                   loop
                   muted
                   playsInline
-                  onError={e => {
-                    (e.currentTarget as HTMLElement).style.display = 'none';
-                  }}
+                  onCanPlay={() => setActiveVideoReady(true)}
+                  onError={() => setActiveVideoReady(false)}
                   style={{
                     position: 'absolute',
                     inset: 0,
@@ -369,26 +381,33 @@ export default function App() {
                     objectPosition: isMobile ? 'center 18%' : isTablet ? 'center 30%' : 'center center',
                     zIndex: 1,
                     pointerEvents: 'none',
+                    opacity: activeVideoReady ? 1 : 0,
+                    transition: 'opacity 0.7s ease-in-out',
                   }}
                 >
                   <source src={`/assets/characters/${char.id}.mp4`} type="video/mp4" />
                 </video>
               )}
 
-              {/* Character Photo with Cinematic Breathing Idle Animation when in Front */}
+              {/* Character Photo — always rendered, fades out once video is ready on active card.
+                  Stays fully visible on inactive side cards. */}
               <img
                 src={char.image}
                 alt={char.name}
                 draggable={false}
                 className={isCenter ? 'character-animate-active' : ''}
                 style={{
+                  position: 'absolute',
+                  inset: 0,
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                   objectPosition: isMobile ? 'center 18%' : isTablet ? 'center 30%' : 'center center',
                   display: 'block',
                   pointerEvents: 'none',
-                  zIndex: 0,
+                  zIndex: 2,
+                  opacity: isCenter && activeVideoReady ? 0 : 1,
+                  transition: 'opacity 0.7s ease-in-out',
                 }}
               />
 
