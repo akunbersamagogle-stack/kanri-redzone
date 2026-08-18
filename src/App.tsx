@@ -54,6 +54,8 @@ export default function App() {
   const [liked, setLiked] = useState<Set<number>>(new Set());
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  // Controls the staggered fade-in of the entire UI after background video loads
+  const [showUI, setShowUI] = useState(false);
   // Tracks whether the active card's character video has loaded and is ready to play
   const [activeVideoReady, setActiveVideoReady] = useState(false);
   const activeVideoRef = useRef<HTMLVideoElement>(null);
@@ -117,6 +119,19 @@ export default function App() {
     setActiveVideoReady(false);
   }, [active]);
 
+  // Trigger UI fade-in after background video loads.
+  // Give it 1.8s of pure video playback first so the user sees the atmosphere.
+  // Falls back after 4s in case the video is slow to load on mobile.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (videoLoaded) {
+      timer = setTimeout(() => setShowUI(true), 1800);
+    } else {
+      // Fallback: show UI after 4s regardless, so users are never stuck
+      timer = setTimeout(() => setShowUI(true), 4000);
+    }
+    return () => clearTimeout(timer);
+  }, [videoLoaded]);
 
   // Keyboard navigation
   const onKeyDown = useCallback((e: KeyboardEvent) => {
@@ -215,6 +230,19 @@ export default function App() {
           pointerEvents: 'none',
         }}
       />
+
+      {/* ─── UI Wrapper — fades in after intro video plays ─────────────────── */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 10,
+          opacity: showUI ? 1 : 0,
+          transform: showUI ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 1.2s cubic-bezier(0.4,0,0.2,1), transform 1.2s cubic-bezier(0.4,0,0.2,1)',
+          pointerEvents: showUI ? 'auto' : 'none',
+        }}
+      >
 
       {/* 4. Top Header & Identity Tag */}
       <div
@@ -861,6 +889,10 @@ export default function App() {
           />
         ))}
       </div>
+      {/* ─── End Dot Indicators ─── */}
+
+      </div>
+      {/* ─── End UI Wrapper ────────────────────────────────────────────────── */}
 
       {/* 9. Full Character Detail View Modal / Overlay */}
       <AnimatePresence>
@@ -874,4 +906,3 @@ export default function App() {
     </div>
   );
 }
-
