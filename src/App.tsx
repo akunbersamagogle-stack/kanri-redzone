@@ -73,14 +73,36 @@ export default function App() {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
+  // Interactive 3D Card Tilt & Parallax Tracking
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, isCenter: boolean) => {
+    if (!isCenter) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: Math.round(x * 12 * 10) / 10, y: Math.round(-y * 12 * 10) / 10 });
+  };
+
+  const handleCardMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
+
   // Drag handling
   const [dragging, setDragging] = useState(false);
   const [dragStart, setDragStart] = useState(0);
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
 
-  const prev = useCallback(() => setActive(i => (i - 1 + total) % total), [total]);
-  const next = useCallback(() => setActive(i => (i + 1) % total), [total]);
+  const prev = useCallback(() => {
+    setTilt({ x: 0, y: 0 });
+    setActive(i => (i - 1 + total) % total);
+  }, [total]);
+
+  const next = useCallback(() => {
+    setTilt({ x: 0, y: 0 });
+    setActive(i => (i + 1) % total);
+  }, [total]);
 
   // Preload character images
   useEffect(() => {
@@ -360,7 +382,8 @@ export default function App() {
           const xPct = offset * 54;
           const scale = isCenter ? 1 : 0.73 - abs * 0.04;
           const zIdx = isCenter ? 10 : 5 - abs;
-          const rotY = offset * -14;
+          const rotX = isCenter ? tilt.y : 0;
+          const rotY = (offset * -14) + (isCenter ? tilt.x : 0);
           const opacity = isCenter ? 1 : 0.58 - abs * 0.12;
           const blur = isCenter ? 0 : abs * 2;
 
@@ -370,6 +393,9 @@ export default function App() {
           return (
             <div
               key={char.id}
+              className={isCenter ? 'card-center-active' : ''}
+              onMouseMove={e => handleCardMouseMove(e, isCenter)}
+              onMouseLeave={handleCardMouseLeave}
               onClick={() => {
                 if (!dragging && abs > 0) setActive(idx);
               }}
@@ -379,25 +405,51 @@ export default function App() {
                 height: cardH,
                 borderRadius: 24,
                 overflow: 'hidden',
-                transform: `translateX(${xPct}%) scale(${scale}) rotateY(${rotY}deg)`,
+                transform: `translateX(${xPct}%) scale(${scale}) rotateX(${rotX}deg) rotateY(${rotY}deg)`,
                 transformOrigin: 'center center',
                 transformStyle: 'preserve-3d',
                 zIndex: zIdx,
                 opacity,
                 filter: blur > 0 ? `blur(${blur}px)` : 'none',
-                transition: dragging ? 'none' : 'all 0.55s cubic-bezier(0.34,1.1,0.64,1)',
+                transition: dragging ? 'none' : isCenter && (tilt.x !== 0 || tilt.y !== 0) ? 'transform 0.1s ease-out' : 'all 0.55s cubic-bezier(0.34,1.1,0.64,1)',
                 cursor: isCenter ? 'default' : 'pointer',
                 boxShadow: isCenter
-                  ? '0 35px 80px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,85,0,0.35), 0 0 35px rgba(255,85,0,0.2)'
+                  ? '0 35px 80px rgba(0,0,0,0.75), 0 0 0 1.5px rgba(255,85,0,0.45), 0 0 35px rgba(255,85,0,0.25)'
                   : '0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08)',
                 background: '#0e1422',
               }}
             >
-              {/* Character Photo */}
+              {/* Optional Future Loop Video (Auto-switches if MP4 is provided) */}
+              {isCenter && (
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  onError={e => {
+                    (e.currentTarget as HTMLElement).style.display = 'none';
+                  }}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center top',
+                    zIndex: 1,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <source src={`/assets/characters/${char.id}.mp4`} type="video/mp4" />
+                </video>
+              )}
+
+              {/* Character Photo with Cinematic Breathing Idle Animation when in Front */}
               <img
                 src={char.image}
                 alt={char.name}
                 draggable={false}
+                className={isCenter ? 'character-animate-active' : ''}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -405,14 +457,25 @@ export default function App() {
                   objectPosition: 'center top',
                   display: 'block',
                   pointerEvents: 'none',
+                  zIndex: 0,
                 }}
               />
+
+              {/* Futuristic Cyber Hologram Shimmer & Laser Scanner Sweep */}
+              {isCenter && (
+                <>
+                  <div className="character-shimmer-beam" />
+                  <div className="character-laser-scanner" />
+                </>
+              )}
 
               {/* Contrast Gradient Overlay */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
+                  zIndex: 2,
+                  pointerEvents: 'none',
                   background: 'linear-gradient(to bottom, rgba(10,14,23,0.15) 0%, transparent 35%, rgba(6,9,16,0.92) 85%, rgba(6,9,16,0.98) 100%)',
                 }}
               />
@@ -427,6 +490,7 @@ export default function App() {
                       top: 16,
                       left: 16,
                       right: 16,
+                      zIndex: 10,
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',

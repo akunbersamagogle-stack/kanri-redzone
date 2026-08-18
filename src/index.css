@@ -469,3 +469,100 @@ html, body {
   font-size: 11px;
   color: #94a3b8;
 }
+
+/* ==========================================================================
+   INTERACTIVE CHARACTER ANIMATIONS & EFFECTS
+   ========================================================================== */
+
+/* 1. Lifelike Cinematic Breathing & Subtle Float */
+@keyframes characterBreathing {
+  0% {
+    transform: scale(1.0) translateY(0px);
+  }
+  50% {
+    transform: scale(1.045) translateY(-5px);
+  }
+  100% {
+    transform: scale(1.0) translateY(0px);
+  }
+}
+
+.character-animate-active {
+  animation: characterBreathing 6s ease-in-out infinite alternate !important;
+  transform-origin: center top !important;
+  will-change: transform !important;
+}
+
+/* 2. Cybernetic Laser Scanline Sweep */
+@keyframes laserScanSweep {
+  0% {
+    top: -15%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+  }
+}
+
+.character-laser-scanner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 85, 0, 0.4) 15%, #ff6a1a 50%, rgba(255, 85, 0, 0.4) 85%, transparent 100%);
+  box-shadow: 0 0 16px #ff5500, 0 0 32px rgba(255, 85, 0, 0.6);
+  pointer-events: none;
+  z-index: 5;
+  animation: laserScanSweep 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* 3. Glowing Pulse Border for Active Card */
+@keyframes activePulseAura {
+  0%, 100% {
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.75), 0 0 0 1.5px rgba(255, 85, 0, 0.4), 0 0 30px rgba(255, 85, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.85), 0 0 0 2px rgba(255, 106, 26, 0.8), 0 0 55px rgba(255, 85, 0, 0.45);
+  }
+}
+
+.card-center-active {
+  animation: activePulseAura 4s ease-in-out infinite;
+}
+
+/* 4. Subtle Holographic Shimmer Beam */
+@keyframes holographicShimmer {
+  0% {
+    transform: translateX(-120%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(220%) rotate(25deg);
+  }
+}
+
+.character-shimmer-beam {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    rgba(255, 106, 26, 0.09) 50%,
+    rgba(255, 255, 255, 0.02) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 4;
+  animation: holographicShimmer 7s ease-in-out infinite;
+}
+
