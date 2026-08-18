@@ -73,11 +73,25 @@ export default function App() {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
+  // Responsive device detection
+  const [viewportWidth, setViewportWidth] = useState<number>(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
+
+  useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = viewportWidth < 768;
+  const isTablet = viewportWidth >= 768 && viewportWidth < 1024;
+
   // Interactive 3D Card Tilt & Parallax Tracking
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, isCenter: boolean) => {
-    if (!isCenter) return;
+    if (!isCenter || isMobile) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -88,7 +102,7 @@ export default function App() {
     setTilt({ x: 0, y: 0 });
   };
 
-  // Drag handling
+  // Drag & Touch Swipe handling
   const [dragging, setDragging] = useState(false);
   const [dragStart, setDragStart] = useState(0);
   const touchStartXRef = useRef(0);
@@ -222,27 +236,29 @@ export default function App() {
       <div
         style={{
           position: 'absolute',
-          top: 24,
+          top: isMobile ? 14 : isTablet ? 20 : 24,
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
-          background: 'rgba(12, 17, 29, 0.72)',
+          gap: isMobile ? 6 : 10,
+          background: 'rgba(12, 17, 29, 0.78)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.14)',
           borderRadius: 999,
-          padding: '8px 22px',
+          padding: isMobile ? '6px 14px' : '8px 22px',
           zIndex: 20,
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.35)',
+          maxWidth: '92vw',
+          whiteSpace: 'nowrap',
         }}
       >
         <span
           style={{
             display: 'inline-block',
-            width: 7,
-            height: 7,
+            width: isMobile ? 6 : 7,
+            height: isMobile ? 6 : 7,
             borderRadius: '50%',
             background: '#ff5500',
             boxShadow: '0 0 10px #ff5500',
@@ -251,27 +267,27 @@ export default function App() {
         <span
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: 12.5,
+            fontSize: isMobile ? 10.5 : 12.5,
             fontWeight: 800,
             color: '#ffffff',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
           }}
         >
-          PW GARAGE RED ZONE BODY#2
+          {isMobile ? 'PW GARAGE // BODY#2' : 'PW GARAGE RED ZONE BODY#2'}
         </span>
-        <span style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.18)', margin: '0 4px' }} />
+        <span style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.18)', margin: isMobile ? '0 2px' : '0 4px' }} />
         <span
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: 11,
-            fontWeight: 600,
+            fontSize: isMobile ? 9.5 : 11,
+            fontWeight: 700,
             color: '#ff6a1a',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
           }}
         >
-          SHIFT RED TEAM
+          {isMobile ? 'RED ZONE' : 'SHIFT RED TEAM'}
         </span>
       </div>
 
@@ -279,12 +295,12 @@ export default function App() {
       <div
         style={{
           position: 'absolute',
-          left: 28,
+          left: isMobile ? 10 : isTablet ? 18 : 28,
           top: '50%',
           transform: 'translateY(-50%)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 14,
+          gap: isMobile ? 10 : 14,
           zIndex: 20,
         }}
       >
@@ -313,14 +329,14 @@ export default function App() {
             onClick={item.action}
             title={item.title}
             style={{
-              width: 44,
-              height: 44,
+              width: isMobile ? 36 : isTablet ? 40 : 44,
+              height: isMobile ? 36 : isTablet ? 40 : 44,
               borderRadius: '50%',
-              background: item.active ? 'rgba(255,85,0,0.25)' : 'rgba(15,22,36,0.65)',
+              background: item.active ? 'rgba(255,85,0,0.25)' : 'rgba(15,22,36,0.72)',
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
-              border: `1px solid ${item.active ? 'rgba(255,85,0,0.6)' : 'rgba(255,255,255,0.12)'}`,
-              color: item.active ? '#ff6a1a' : 'rgba(255,255,255,0.7)',
+              border: `1px solid ${item.active ? 'rgba(255,85,0,0.6)' : 'rgba(255,255,255,0.14)'}`,
+              color: item.active ? '#ff6a1a' : 'rgba(255,255,255,0.75)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -334,16 +350,16 @@ export default function App() {
         ))}
       </div>
 
-      {/* 6. Main 3D Card Carousel (16:9 Ratio Format) */}
+      {/* 6. Main 3D Card Carousel (Responsive: Portrait on Mobile, 4:3 on Tablet, 16:9 on Desktop) */}
       <div
         style={{
           position: 'relative',
           width: '100%',
-          height: 'clamp(360px, 58vh, 520px)',
+          height: isMobile ? 'clamp(410px, 64vh, 520px)' : isTablet ? 'clamp(380px, 60vh, 540px)' : 'clamp(360px, 58vh, 520px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          perspective: '1400px',
+          perspective: isMobile ? '1000px' : '1400px',
           cursor: dragging ? 'grabbing' : 'grab',
           zIndex: 10,
         }}
@@ -379,15 +395,16 @@ export default function App() {
           if (abs > 2) return null;
 
           const isCenter = offset === 0;
-          const xPct = offset * 66;
-          const scale = isCenter ? 1 : 0.76 - abs * 0.05;
+          const xPct = offset * (isMobile ? 86 : isTablet ? 68 : 66);
+          const scale = isCenter ? 1 : isMobile ? (0.72 - abs * 0.06) : (0.76 - abs * 0.05);
           const zIdx = isCenter ? 10 : 5 - abs;
           const rotX = isCenter ? tilt.y : 0;
-          const rotY = (offset * -14) + (isCenter ? tilt.x : 0);
-          const opacity = isCenter ? 1 : 0.55 - abs * 0.12;
-          const blur = isCenter ? 0 : abs * 2;
+          const rotY = (offset * (isMobile ? -16 : -14)) + (isCenter ? tilt.x : 0);
+          const opacity = isCenter ? 1 : isMobile ? (0.45 - abs * 0.15) : (0.55 - abs * 0.12);
+          const blur = isCenter ? 0 : abs * (isMobile ? 3 : 2);
 
-          const cardW = 'clamp(320px, 46vw, 640px)';
+          const cardW = isMobile ? 'clamp(270px, 80vw, 340px)' : isTablet ? 'clamp(380px, 54vw, 520px)' : 'clamp(420px, 46vw, 640px)';
+          const cardAspect = isMobile ? '3 / 4' : isTablet ? '4 / 3' : '16 / 9';
 
           return (
             <div
@@ -401,8 +418,8 @@ export default function App() {
               style={{
                 position: 'absolute',
                 width: cardW,
-                aspectRatio: '16 / 9',
-                borderRadius: 22,
+                aspectRatio: cardAspect,
+                borderRadius: isMobile ? 18 : 22,
                 overflow: 'hidden',
                 transform: `translateX(${xPct}%) scale(${scale}) rotateX(${rotX}deg) rotateY(${rotY}deg)`,
                 transformOrigin: 'center center',
@@ -434,7 +451,7 @@ export default function App() {
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
-                    objectPosition: 'center top',
+                    objectPosition: isMobile ? 'center 18%' : isTablet ? 'center 30%' : 'center center',
                     zIndex: 1,
                     pointerEvents: 'none',
                   }}
@@ -453,7 +470,7 @@ export default function App() {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: 'center center',
+                  objectPosition: isMobile ? 'center 18%' : isTablet ? 'center 30%' : 'center center',
                   display: 'block',
                   pointerEvents: 'none',
                   zIndex: 0,
@@ -486,9 +503,9 @@ export default function App() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 14,
-                      left: 16,
-                      right: 16,
+                      top: isMobile ? 12 : 14,
+                      left: isMobile ? 12 : 16,
+                      right: isMobile ? 12 : 16,
                       zIndex: 10,
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -503,15 +520,15 @@ export default function App() {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 6,
-                        background: 'rgba(10,14,23,0.65)',
+                        gap: 5,
+                        background: 'rgba(10,14,23,0.72)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(255,85,0,0.4)',
+                        border: '1px solid rgba(255,85,0,0.45)',
                         borderRadius: 999,
-                        padding: '5px 12px',
+                        padding: isMobile ? '4px 10px' : '5px 12px',
                         color: '#ffffff',
-                        fontSize: 11,
+                        fontSize: isMobile ? 10 : 11,
                         fontWeight: 700,
                         letterSpacing: '0.08em',
                         cursor: 'pointer',
@@ -528,12 +545,12 @@ export default function App() {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 5,
-                        background: 'rgba(16,185,129,0.18)',
-                        border: '1px solid rgba(16,185,129,0.4)',
+                        gap: 4,
+                        background: 'rgba(16,185,129,0.2)',
+                        border: '1px solid rgba(16,185,129,0.45)',
                         borderRadius: 999,
-                        padding: '3px 9px',
-                        fontSize: 9.5,
+                        padding: isMobile ? '3px 8px' : '3px 9px',
+                        fontSize: isMobile ? 9 : 9.5,
                         fontFamily: 'var(--font-mono)',
                         color: '#10b981',
                         fontWeight: 700,
@@ -557,13 +574,13 @@ export default function App() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 48,
-                      left: 16,
-                      background: 'rgba(255,85,0,0.18)',
-                      border: '1px solid rgba(255,85,0,0.45)',
+                      top: isMobile ? 44 : 48,
+                      left: isMobile ? 12 : 16,
+                      background: 'rgba(255,85,0,0.22)',
+                      border: '1px solid rgba(255,85,0,0.5)',
                       borderRadius: 999,
                       padding: '2px 8px',
-                      fontSize: 10,
+                      fontSize: isMobile ? 9.5 : 10,
                       fontFamily: 'var(--font-mono)',
                       color: '#ff6a1a',
                       fontWeight: 700,
@@ -577,11 +594,11 @@ export default function App() {
                   <div
                     style={{
                       position: 'absolute',
-                      top: 50,
-                      right: 16,
-                      fontSize: 10.5,
+                      top: isMobile ? 46 : 50,
+                      right: isMobile ? 12 : 16,
+                      fontSize: isMobile ? 10 : 10.5,
                       fontFamily: 'var(--font-mono)',
-                      color: 'rgba(255,255,255,0.6)',
+                      color: 'rgba(255,255,255,0.7)',
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                     }}
@@ -597,23 +614,23 @@ export default function App() {
                       left: 0,
                       right: 0,
                       zIndex: 10,
-                      padding: '24px 20px 18px',
+                      padding: isMobile ? '20px 14px 14px' : '24px 20px 18px',
                       background: 'linear-gradient(to top, rgba(5,7,14,0.96) 0%, rgba(5,7,14,0.85) 60%, rgba(5,7,14,0.4) 85%, transparent 100%)',
                       backdropFilter: 'blur(4px)',
                       WebkitBackdropFilter: 'blur(4px)',
-                      borderBottomLeftRadius: 22,
-                      borderBottomRightRadius: 22,
+                      borderBottomLeftRadius: isMobile ? 18 : 22,
+                      borderBottomRightRadius: isMobile ? 18 : 22,
                     }}
                   >
                     <div
                       style={{
                         fontFamily: 'var(--font-mono)',
-                        fontSize: 10.5,
+                        fontSize: isMobile ? 9.5 : 10.5,
                         fontWeight: 800,
                         color: '#ff6a1a',
                         letterSpacing: '0.15em',
                         textTransform: 'uppercase',
-                        marginBottom: 4,
+                        marginBottom: isMobile ? 2 : 4,
                         textShadow: '0 2px 8px rgba(0,0,0,0.9)',
                       }}
                     >
@@ -623,9 +640,9 @@ export default function App() {
                     <h2
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 'clamp(20px, 2.8vw, 26px)',
+                        fontSize: isMobile ? 'clamp(18px, 4.8vw, 22px)' : 'clamp(20px, 2.8vw, 26px)',
                         fontWeight: 900,
-                        margin: '0 0 6px',
+                        margin: isMobile ? '0 0 4px' : '0 0 6px',
                         color: '#ffffff',
                         lineHeight: 1.15,
                         textTransform: 'uppercase',
@@ -639,13 +656,13 @@ export default function App() {
                     <p
                       style={{
                         fontFamily: 'var(--font-body)',
-                        fontSize: 12,
-                        lineHeight: 1.5,
+                        fontSize: isMobile ? 11 : 12,
+                        lineHeight: isMobile ? 1.4 : 1.5,
                         color: '#f1f5f9',
                         fontWeight: 500,
-                        margin: '0 0 10px',
+                        margin: isMobile ? '0 0 8px' : '0 0 10px',
                         display: '-webkit-box',
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: isMobile ? 2 : 2,
                         WebkitBoxOrient: 'vertical',
                         overflow: 'hidden',
                         textShadow: '0 1px 8px rgba(0,0,0,0.9)',
@@ -658,15 +675,15 @@ export default function App() {
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: 6,
+                        gap: 5,
                         color: '#ffd080',
-                        fontSize: 11,
+                        fontSize: isMobile ? 10 : 11,
                         fontFamily: 'var(--font-mono)',
                         fontWeight: 700,
                         background: 'rgba(255,85,0,0.2)',
                         border: '1px solid rgba(255,85,0,0.45)',
                         borderRadius: 999,
-                        padding: '4px 12px',
+                        padding: isMobile ? '3px 9px' : '4px 12px',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
                       }}
                     >
@@ -682,23 +699,23 @@ export default function App() {
                 <div
                   style={{
                     position: 'absolute',
-                    bottom: 12,
-                    left: 12,
-                    right: 12,
+                    bottom: isMobile ? 8 : 12,
+                    left: isMobile ? 8 : 12,
+                    right: isMobile ? 8 : 12,
                     zIndex: 10,
-                    padding: '10px 14px',
+                    padding: isMobile ? '8px 10px' : '10px 14px',
                     background: 'rgba(8, 12, 22, 0.88)',
                     backdropFilter: 'blur(10px)',
                     WebkitBackdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: 14,
+                    borderRadius: isMobile ? 10 : 14,
                     boxShadow: '0 6px 18px rgba(0,0,0,0.5)',
                   }}
                 >
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: 10,
+                      fontSize: isMobile ? 9 : 10,
                       fontWeight: 800,
                       color: '#ff6a1a',
                       letterSpacing: '0.12em',
@@ -711,7 +728,7 @@ export default function App() {
                   <div
                     style={{
                       fontFamily: 'var(--font-body)',
-                      fontSize: 13.5,
+                      fontSize: isMobile ? 11.5 : 13.5,
                       fontWeight: 800,
                       color: '#ffffff',
                       textTransform: 'uppercase',
@@ -726,7 +743,7 @@ export default function App() {
                   <div
                     style={{
                       fontFamily: 'var(--font-mono)',
-                      fontSize: 10,
+                      fontSize: isMobile ? 9 : 10,
                       color: '#ffd080',
                       fontWeight: 600,
                       whiteSpace: 'nowrap',
@@ -747,28 +764,28 @@ export default function App() {
       <div
         style={{
           position: 'absolute',
-          bottom: 32,
+          bottom: isMobile ? 20 : isTablet ? 26 : 32,
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
-          background: 'rgba(12, 17, 29, 0.8)',
+          gap: isMobile ? 8 : 12,
+          background: 'rgba(12, 17, 29, 0.82)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
           border: '1px solid rgba(255, 255, 255, 0.14)',
           borderRadius: 999,
-          padding: '10px 12px 10px 16px',
+          padding: isMobile ? '6px 8px 6px 10px' : '10px 12px 10px 16px',
           zIndex: 20,
-          minWidth: 'clamp(290px, 42vw, 420px)',
+          width: isMobile ? 'min(92vw, 360px)' : isTablet ? 'clamp(340px, 55vw, 440px)' : 'clamp(290px, 42vw, 420px)',
           boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
         }}
       >
         <button
           onClick={prev}
           style={{
-            width: 36,
-            height: 36,
+            width: isMobile ? 32 : 36,
+            height: isMobile ? 32 : 36,
             borderRadius: '50%',
             background: 'rgba(255,255,255,0.08)',
             border: '1px solid rgba(255,255,255,0.15)',
@@ -788,8 +805,8 @@ export default function App() {
         <div
           onClick={() => setSelectedCharacter(current)}
           style={{
-            width: 42,
-            height: 42,
+            width: isMobile ? 34 : 42,
+            height: isMobile ? 34 : 42,
             borderRadius: '50%',
             overflow: 'hidden',
             flexShrink: 0,
@@ -810,7 +827,7 @@ export default function App() {
           <div
             style={{
               fontFamily: 'var(--font-body)',
-              fontSize: 13.5,
+              fontSize: isMobile ? 12 : 13.5,
               fontWeight: 800,
               color: '#ffffff',
               whiteSpace: 'nowrap',
@@ -825,8 +842,8 @@ export default function App() {
           <div
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: 10,
-              color: 'rgba(255,255,255,0.5)',
+              fontSize: isMobile ? 9 : 10,
+              color: 'rgba(255,255,255,0.55)',
               marginTop: 1,
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -841,8 +858,8 @@ export default function App() {
         <button
           onClick={toggleLike}
           style={{
-            width: 36,
-            height: 36,
+            width: isMobile ? 32 : 36,
+            height: isMobile ? 32 : 36,
             borderRadius: '50%',
             background: liked.has(active) ? 'rgba(255,85,0,0.25)' : 'rgba(255,255,255,0.08)',
             border: `1px solid ${liked.has(active) ? '#ff5500' : 'rgba(255,255,255,0.12)'}`,
@@ -862,8 +879,8 @@ export default function App() {
         <button
           onClick={next}
           style={{
-            width: 36,
-            height: 36,
+            width: isMobile ? 32 : 36,
+            height: isMobile ? 32 : 36,
             borderRadius: '50%',
             background: 'rgba(255,255,255,0.08)',
             border: '1px solid rgba(255,255,255,0.15)',
