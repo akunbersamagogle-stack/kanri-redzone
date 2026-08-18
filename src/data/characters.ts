@@ -408,18 +408,30 @@ export const INITIAL_CHARACTERS: Character[] = [
         code: 'SEC-02',
         tagline: 'Preventive Maintenance Execution',
         description: 'Tracking and scheduling for preventive maintenance tasks, inspection logs, and machine uptime assurance.',
-        status: 'READY FOR DATA',
-        recordsCount: 0,
-        lastUpdated: 'Pending Data Input',
+        status: 'ACTIVE — 1 DOCUMENT',
+        recordsCount: 1,
+        lastUpdated: 'Agustus 2026',
         placeholderItems: [
           {
             id: 'PM-001',
-            title: 'Preventive Maintenance Schedule Structure',
-            status: 'INITIALIZED',
-            date: 'Phase 2',
-            summary: 'Routine maintenance logs and equipment calibration records.'
+            title: 'Monthly Schedule PM Body#2 Red Shift — Agustus 2026',
+            status: 'COMPLETED',
+            date: '2026-08',
+            summary: 'Jadwal PM bulanan Shell Body SA, mencakup seluruh peralatan core equipment Shift RED untuk bulan Agustus 2026.'
+          }
+        ],
+        pmDocuments: [
+          {
+            id: 'PM-C05-2026-08',
+            title: 'Monthly Schedule PM Body#2 Red Shift',
+            year: 2026,
+            month: 8,
+            imageUrl: '/assets/documents/pm_c05_2026_08.png',
+            status: 'COMPLETED',
+            notes: 'PIC: Kurdi K. | TL: Tekatno | Area: Shell Body'
           }
         ]
+
       },
       improvement: {
         id: 'improvement',

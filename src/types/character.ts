@@ -1,5 +1,16 @@
 export type CategoryKey = 'idea' | 'pm' | 'improvement' | 'safety';
 
+/** A single PM document entry (monthly schedule image + metadata) */
+export interface PmDocument {
+  id: string;
+  title: string;
+  year: number;
+  month: number; // 1–12
+  imageUrl: string;
+  status: 'COMPLETED' | 'IN_PROGRESS' | 'PLANNED';
+  notes?: string;
+}
+
 export interface CategoryData {
   id: CategoryKey;
   label: string;
@@ -16,6 +27,8 @@ export interface CategoryData {
     date: string;
     summary: string;
   }>;
+  /** PM-specific: list of monthly schedule documents */
+  pmDocuments?: PmDocument[];
 }
 
 export interface Character {
