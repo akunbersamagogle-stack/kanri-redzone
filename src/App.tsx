@@ -13,27 +13,10 @@ function PinIcon() {
   );
 }
 
-function BookmarkIcon({ filled = false }: { filled?: boolean }) {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
-  );
-}
-
 function HeartIcon({ filled = false }: { filled?: boolean }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
     </svg>
   );
 }
@@ -69,7 +52,6 @@ export default function App() {
 
   const [active, setActive] = useState(0);
   const [liked, setLiked] = useState<Set<number>>(new Set());
-  const [bookmarked, setBookmarked] = useState<Set<number>>(new Set());
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
 
@@ -151,14 +133,6 @@ export default function App() {
 
   const toggleLike = () => {
     setLiked(s => {
-      const n = new Set(s);
-      n.has(active) ? n.delete(active) : n.add(active);
-      return n;
-    });
-  };
-
-  const toggleBookmark = () => {
-    setBookmarked(s => {
       const n = new Set(s);
       n.has(active) ? n.delete(active) : n.add(active);
       return n;
@@ -291,66 +265,7 @@ export default function App() {
         </span>
       </div>
 
-      {/* 5. Left Sidebar Quick Actions */}
-      <div
-        style={{
-          position: 'absolute',
-          left: isMobile ? 10 : isTablet ? 18 : 28,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: isMobile ? 10 : 14,
-          zIndex: 20,
-        }}
-      >
-        {[
-          {
-            icon: <BookmarkIcon filled={bookmarked.has(active)} />,
-            action: toggleBookmark,
-            active: bookmarked.has(active),
-            title: 'Bookmark member',
-          },
-          {
-            icon: <HeartIcon filled={liked.has(active)} />,
-            action: toggleLike,
-            active: liked.has(active),
-            title: 'Like member',
-          },
-          {
-            icon: <UserIcon />,
-            action: () => setSelectedCharacter(current),
-            active: false,
-            title: 'Open full profile',
-          },
-        ].map((item, i) => (
-          <button
-            key={i}
-            onClick={item.action}
-            title={item.title}
-            style={{
-              width: isMobile ? 36 : isTablet ? 40 : 44,
-              height: isMobile ? 36 : isTablet ? 40 : 44,
-              borderRadius: '50%',
-              background: item.active ? 'rgba(255,85,0,0.25)' : 'rgba(15,22,36,0.72)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: `1px solid ${item.active ? 'rgba(255,85,0,0.6)' : 'rgba(255,255,255,0.14)'}`,
-              color: item.active ? '#ff6a1a' : 'rgba(255,255,255,0.75)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              boxShadow: item.active ? '0 0 20px rgba(255,85,0,0.35)' : '0 4px 14px rgba(0,0,0,0.3)',
-              transition: 'all 0.25s ease',
-            }}
-          >
-            {item.icon}
-          </button>
-        ))}
-      </div>
-
-      {/* 6. Main 3D Card Carousel (Responsive: Portrait on Mobile, 4:3 on Tablet, 16:9 on Desktop) */}
+      {/* 5. Main 3D Card Carousel (Responsive: Portrait on Mobile, 4:3 on Tablet, 16:9 on Desktop) */}
       <div
         style={{
           position: 'relative',
