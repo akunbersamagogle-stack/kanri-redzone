@@ -642,72 +642,75 @@ html, body {
   letter-spacing: 0.05em;
 }
 
-/* PM document card */
+/* PM Document Card — Sleek Proportional Dashboard Layout */
 .pm-doc-card {
-  background: rgba(12, 17, 29, 0.7);
-  border: 1px solid rgba(255, 85, 0, 0.25);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 12px;
+  background: rgba(13, 18, 30, 0.78);
+  border: 1px solid rgba(255, 85, 0, 0.3);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 85, 0, 0.08);
+  transition: all 0.25s ease;
 }
 
-.pm-doc-card-header {
+.pm-doc-card:hover {
+  border-color: rgba(255, 85, 0, 0.55);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 35px rgba(255, 85, 0, 0.15);
+}
+
+/* Left: Compact Thumbnail Box */
+.pm-doc-thumb-container {
+  width: clamp(190px, 22vw, 250px);
+  flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 6px;
 }
 
-.pm-doc-period {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: rgba(255, 106, 26, 0.85);
-  letter-spacing: 0.08em;
-}
-
-/* Thumbnail button */
 .pm-doc-thumb-btn {
   position: relative;
-  display: block;
   width: 100%;
-  border: none;
+  aspect-ratio: 16 / 10;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 0;
-  margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
-  background: transparent;
+  background: #090d18;
+  display: block;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
 }
 
 .pm-doc-thumb {
-  display: block;
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: filter 0.25s;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.35s ease, filter 0.25s;
 }
 
 .pm-doc-thumb-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(7, 9, 17, 0.65);
+  background: rgba(7, 9, 17, 0.72);
+  backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: #fff;
+  color: #ffffff;
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   opacity: 0;
-  transition: opacity 0.22s;
-  border-radius: 8px;
+  transition: opacity 0.22s ease;
 }
 
 .pm-doc-thumb-btn:hover .pm-doc-thumb-overlay {
@@ -715,7 +718,70 @@ html, body {
 }
 
 .pm-doc-thumb-btn:hover .pm-doc-thumb {
-  filter: brightness(0.6);
+  transform: scale(1.04);
+}
+
+.pm-doc-thumb-caption {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Right: Telemetry & Info Hub */
+.pm-doc-info-hub {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.pm-doc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pm-doc-tags-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pm-doc-card-title {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.pm-doc-meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pm-meta-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.04em;
 }
 
 /* ── Lightbox ── */
@@ -736,7 +802,7 @@ html, body {
   background: #0d1220;
   border: 1px solid rgba(255, 85, 0, 0.35);
   border-radius: 16px;
-  max-width: min(92vw, 1100px);
+  max-width: min(94vw, 1200px);
   max-height: 90vh;
   width: 100%;
   display: flex;
@@ -960,4 +1026,108 @@ html, body {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   letter-spacing: 0.06em;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Responsive Scale Adjustments for Expand Modal (Phone & Tablet)
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .detail-body-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    overflow-y: auto;
+    height: calc(100vh - 65px);
+  }
+
+  .detail-character-spotlight {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .spotlight-card {
+    height: 210px;
+  }
+
+  .detail-main-content {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .pm-doc-card {
+    flex-direction: column;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .pm-doc-thumb-container {
+    width: 100%;
+  }
+
+  .pm-doc-thumb-btn {
+    aspect-ratio: 16 / 9;
+    max-height: 180px;
+  }
+
+  .pm-doc-actions-bar {
+    flex-direction: column;
+  }
+
+  .pm-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .detail-header-bar {
+    padding: 10px 14px;
+  }
+
+  .detail-header-title {
+    font-size: 11.5px;
+  }
+
+  .return-button {
+    padding: 6px 12px;
+    font-size: 9.5px;
+  }
+
+  .category-nav-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .category-tab-btn {
+    padding: 10px;
+  }
+
+  .tab-label {
+    font-size: 11px;
+  }
+
+  .pm-filter-row {
+    gap: 8px;
+  }
+
+  .pm-select {
+    min-width: 80px;
+    padding: 5px 24px 5px 8px;
+    font-size: 10px;
+  }
+
+  .pm-lightbox-header {
+    padding: 10px 12px;
+  }
+
+  .pm-lightbox-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pm-lightbox-content-wrap {
+    height: 60vh;
+  }
+}
+
 

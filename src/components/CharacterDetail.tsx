@@ -270,80 +270,109 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                       </div>
                     </div>
 
-                    {/* Document cards */}
+                    {/* Document cards — Sleek Proportional Dashboard Layout */}
                     {filteredPmDocs.length > 0 ? (
                       filteredPmDocs.map(doc => (
                         <div key={doc.id} className="pm-doc-card">
-                          <div className="pm-doc-card-header">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <span className="card-id-tag">{doc.id}</span>
-                              <span className="card-status-tag">
-                                {doc.status}
-                              </span>
-                              {doc.pdfUrl && (
-                                <span className="pm-doc-badge-pdf">
-                                  <FileSpreadsheet size={11} />
-                                  <span>PDF ASLI / VEKTOR</span>
-                                </span>
-                              )}
-                            </div>
-                            <span className="pm-doc-period">
-                              {MONTHS[doc.month - 1]} {doc.year}
-                            </span>
-                          </div>
-
-                          <h4 className="card-item-title">{doc.title}</h4>
-                          {doc.notes && (
-                            <p className="card-item-summary">{doc.notes}</p>
-                          )}
-
-                          {/* Action Buttons Bar */}
-                          <div className="pm-doc-actions-bar">
+                          {/* Left: Compact Interactive Preview Thumbnail */}
+                          <div className="pm-doc-thumb-container">
                             <button
                               type="button"
-                              className="pm-action-btn primary"
+                              className="pm-doc-thumb-btn"
                               onClick={() => {
                                 setViewMode('pdf');
                                 setLightboxDoc(doc);
                               }}
+                              title="Klik untuk membuka dokumen PDF HD"
                             >
-                              <ZoomIn size={14} />
-                              <span>Buka Dokumen PDF (HD / Zoomable)</span>
+                              <img
+                                src={doc.imageUrl}
+                                alt={doc.title}
+                                className="pm-doc-thumb"
+                              />
+                              <div className="pm-doc-thumb-overlay">
+                                <ZoomIn size={20} />
+                                <span>Buka PDF HD</span>
+                              </div>
                             </button>
-
-                            {doc.pdfUrl && (
-                              <a
-                                href={doc.pdfUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="pm-action-btn secondary"
-                              >
-                                <ExternalLink size={13} />
-                                <span>Buka Tab Baru</span>
-                              </a>
-                            )}
+                            <span className="pm-doc-thumb-caption">PREVIEW SCHEDULE</span>
                           </div>
 
-                          {/* Document thumbnail — click to open lightbox */}
-                          <button
-                            type="button"
-                            className="pm-doc-thumb-btn"
-                            onClick={() => {
-                              setViewMode('pdf');
-                              setLightboxDoc(doc);
-                            }}
-                          >
-                            <img
-                              src={doc.imageUrl}
-                              alt={doc.title}
-                              className="pm-doc-thumb"
-                            />
-                            <div className="pm-doc-thumb-overlay">
-                              <ZoomIn size={24} />
-                              <span style={{ fontWeight: 800 }}>PREVIEW INTERAKTIF (PDF ASLI HD)</span>
-                              <span style={{ fontSize: 10, opacity: 0.8 }}>Klik untuk zoom & baca tanpa blur</span>
+                          {/* Right: Telemetry & Actions Hub */}
+                          <div className="pm-doc-info-hub">
+                            <div className="pm-doc-card-header">
+                              <div className="pm-doc-tags-wrap">
+                                <span className="card-id-tag">{doc.id}</span>
+                                <span className="card-status-tag">
+                                  {doc.status}
+                                </span>
+                                {doc.pdfUrl && (
+                                  <span className="pm-doc-badge-pdf">
+                                    <FileSpreadsheet size={11} />
+                                    <span>VECTOR PDF HD</span>
+                                  </span>
+                                )}
+                              </div>
+                              <span className="pm-doc-period">
+                                {MONTHS[doc.month - 1]} {doc.year}
+                              </span>
                             </div>
-                          </button>
+
+                            <h4 className="pm-doc-card-title">{doc.title}</h4>
+
+                            {doc.notes && (
+                              <div className="pm-doc-meta-chips">
+                                {doc.notes.split('|').map((note, nIdx) => {
+                                  const trimmed = note.trim();
+                                  return (
+                                    <span key={nIdx} className="pm-meta-chip">
+                                      {trimmed}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            )}
+
+                            {/* Action Buttons Bar */}
+                            <div className="pm-doc-actions-bar">
+                              <button
+                                type="button"
+                                className="pm-action-btn primary"
+                                onClick={() => {
+                                  setViewMode('pdf');
+                                  setLightboxDoc(doc);
+                                }}
+                              >
+                                <ZoomIn size={14} />
+                                <span>Buka Viewer PDF (HD / Zoomable)</span>
+                              </button>
+
+                              {doc.pdfUrl && (
+                                <a
+                                  href={doc.pdfUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="pm-action-btn secondary"
+                                  title="Buka PDF di tab baru browser"
+                                >
+                                  <ExternalLink size={13} />
+                                  <span>Tab Baru</span>
+                                </a>
+                              )}
+
+                              {doc.pdfUrl && (
+                                <a
+                                  href={doc.pdfUrl}
+                                  download={`PM_Schedule_${character.name}_${doc.year}_${doc.month}.pdf`}
+                                  className="pm-action-btn secondary"
+                                  title="Download file PDF asli"
+                                >
+                                  <Download size={13} />
+                                  <span>Download</span>
+                                </a>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       ))
                     ) : (
