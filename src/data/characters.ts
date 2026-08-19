@@ -427,6 +427,7 @@ export const INITIAL_CHARACTERS: Character[] = [
             year: 2026,
             month: 8,
             imageUrl: '/assets/documents/pm_c05_2026_08.png',
+            pdfUrl: '/assets/documents/pm_c05_2026_08.pdf',
             status: 'COMPLETED',
             notes: 'PIC: Kurdi K. | TL: Tekatno | Area: Shell Body'
           }

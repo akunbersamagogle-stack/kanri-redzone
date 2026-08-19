@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Lightbulb, Wrench, TrendingUp, ShieldCheck, CheckCircle2, FileText, ChevronDown, ZoomIn, X } from 'lucide-react';
+import {
+  ArrowLeft,
+  Lightbulb,
+  Wrench,
+  TrendingUp,
+  ShieldCheck,
+  CheckCircle2,
+  FileText,
+  ChevronDown,
+  ZoomIn,
+  X,
+  ExternalLink,
+  Download,
+  FileSpreadsheet
+} from 'lucide-react';
 import type { Character, CategoryKey, PmDocument } from '../types/character';
 
 interface CharacterDetailProps {
@@ -31,8 +45,9 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
   const [pmYear, setPmYear] = useState<number>(defaultYear);
   const [pmMonth, setPmMonth] = useState<number>(defaultMonth);
 
-  // Lightbox state for PM document image
+  // Lightbox state for PM document
   const [lightboxDoc, setLightboxDoc] = useState<PmDocument | null>(null);
+  const [viewMode, setViewMode] = useState<'pdf' | 'image'>('pdf');
 
   const categoriesConfig: Array<{
     key: CategoryKey;
@@ -222,14 +237,17 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                       filteredPmDocs.map(doc => (
                         <div key={doc.id} className="pm-doc-card">
                           <div className="pm-doc-card-header">
-                            <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                               <span className="card-id-tag">{doc.id}</span>
-                              <span
-                                className="card-status-tag"
-                                style={{ marginLeft: 8 }}
-                              >
+                              <span className="card-status-tag">
                                 {doc.status}
                               </span>
+                              {doc.pdfUrl && (
+                                <span className="pm-doc-badge-pdf">
+                                  <FileSpreadsheet size={11} />
+                                  <span>PDF ASLI / VEKTOR</span>
+                                </span>
+                              )}
                             </div>
                             <span className="pm-doc-period">
                               {MONTHS[doc.month - 1]} {doc.year}
@@ -241,11 +259,41 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                             <p className="card-item-summary">{doc.notes}</p>
                           )}
 
+                          {/* Action Buttons Bar */}
+                          <div className="pm-doc-actions-bar">
+                            <button
+                              type="button"
+                              className="pm-action-btn primary"
+                              onClick={() => {
+                                setViewMode('pdf');
+                                setLightboxDoc(doc);
+                              }}
+                            >
+                              <ZoomIn size={14} />
+                              <span>Buka Dokumen PDF (HD / Zoomable)</span>
+                            </button>
+
+                            {doc.pdfUrl && (
+                              <a
+                                href={doc.pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="pm-action-btn secondary"
+                              >
+                                <ExternalLink size={13} />
+                                <span>Buka Tab Baru</span>
+                              </a>
+                            )}
+                          </div>
+
                           {/* Document thumbnail — click to open lightbox */}
                           <button
                             type="button"
                             className="pm-doc-thumb-btn"
-                            onClick={() => setLightboxDoc(doc)}
+                            onClick={() => {
+                              setViewMode('pdf');
+                              setLightboxDoc(doc);
+                            }}
                           >
                             <img
                               src={doc.imageUrl}
@@ -253,8 +301,9 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                               className="pm-doc-thumb"
                             />
                             <div className="pm-doc-thumb-overlay">
-                              <ZoomIn size={22} />
-                              <span>Buka Dokumen</span>
+                              <ZoomIn size={24} />
+                              <span style={{ fontWeight: 800 }}>PREVIEW INTERAKTIF (PDF ASLI HD)</span>
+                              <span style={{ fontSize: 10, opacity: 0.8 }}>Klik untuk zoom & baca tanpa blur</span>
                             </div>
                           </button>
                         </div>
@@ -311,7 +360,7 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
         </div>
       </motion.div>
 
-      {/* ── PM Document Lightbox ── */}
+      {/* ── PM Document Full-Screen Interactive Lightbox ── */}
       <AnimatePresence>
         {lightboxDoc && (
           <motion.div
@@ -334,27 +383,84 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                 <div>
                   <span className="pm-lightbox-title">{lightboxDoc.title}</span>
                   <span className="pm-lightbox-period">
-                    {MONTHS[lightboxDoc.month - 1]} {lightboxDoc.year}
+                    {MONTHS[lightboxDoc.month - 1]} {lightboxDoc.year} • {lightboxDoc.notes}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  className="pm-lightbox-close"
-                  onClick={() => setLightboxDoc(null)}
-                >
-                  <X size={18} />
-                </button>
+
+                <div className="pm-lightbox-controls">
+                  {lightboxDoc.pdfUrl && (
+                    <div className="pm-view-toggle">
+                      <button
+                        type="button"
+                        className={`pm-toggle-btn ${viewMode === 'pdf' ? 'active' : ''}`}
+                        onClick={() => setViewMode('pdf')}
+                      >
+                        PDF HD (Vektor)
+                      </button>
+                      <button
+                        type="button"
+                        className={`pm-toggle-btn ${viewMode === 'image' ? 'active' : ''}`}
+                        onClick={() => setViewMode('image')}
+                      >
+                        Gambar
+                      </button>
+                    </div>
+                  )}
+
+                  {lightboxDoc.pdfUrl && (
+                    <a
+                      href={lightboxDoc.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pm-header-action-btn"
+                      title="Buka di tab baru"
+                    >
+                      <ExternalLink size={14} />
+                      <span>Buka Tab Baru</span>
+                    </a>
+                  )}
+
+                  {lightboxDoc.pdfUrl && (
+                    <a
+                      href={lightboxDoc.pdfUrl}
+                      download={`PM_Schedule_${character.name}_${lightboxDoc.year}_${lightboxDoc.month}.pdf`}
+                      className="pm-header-action-btn"
+                      title="Download PDF"
+                    >
+                      <Download size={14} />
+                      <span>Download</span>
+                    </a>
+                  )}
+
+                  <button
+                    type="button"
+                    className="pm-lightbox-close"
+                    onClick={() => setLightboxDoc(null)}
+                    title="Tutup (ESC)"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
-              <div className="pm-lightbox-img-wrap">
-                <img
-                  src={lightboxDoc.imageUrl}
-                  alt={lightboxDoc.title}
-                  className="pm-lightbox-img"
-                />
+
+              {/* Viewer body */}
+              <div className="pm-lightbox-content-wrap">
+                {viewMode === 'pdf' && lightboxDoc.pdfUrl ? (
+                  <iframe
+                    src={`${lightboxDoc.pdfUrl}#toolbar=1&view=FitH`}
+                    title={lightboxDoc.title}
+                    className="pm-lightbox-iframe"
+                  />
+                ) : (
+                  <div className="pm-lightbox-img-scroll">
+                    <img
+                      src={lightboxDoc.imageUrl}
+                      alt={lightboxDoc.title}
+                      className="pm-lightbox-img"
+                    />
+                  </div>
+                )}
               </div>
-              {lightboxDoc.notes && (
-                <div className="pm-lightbox-notes">{lightboxDoc.notes}</div>
-              )}
             </motion.div>
           </motion.div>
         )}

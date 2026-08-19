@@ -1,12 +1,13 @@
 export type CategoryKey = 'idea' | 'pm' | 'improvement' | 'safety';
 
-/** A single PM document entry (monthly schedule image + metadata) */
+/** A single PM document entry (monthly schedule image/pdf + metadata) */
 export interface PmDocument {
   id: string;
   title: string;
   year: number;
   month: number; // 1–12
   imageUrl: string;
+  pdfUrl?: string;
   status: 'COMPLETED' | 'IN_PROGRESS' | 'PLANNED';
   notes?: string;
 }
