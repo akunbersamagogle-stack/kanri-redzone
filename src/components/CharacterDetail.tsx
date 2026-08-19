@@ -15,7 +15,11 @@ import {
   Download,
   FileSpreadsheet
 } from 'lucide-react';
-import type { Character, CategoryKey, PmDocument } from '../types/character';
+import type { Character, CategoryKey, PmDocument, PmEquipmentEntry } from '../types/character';
+import { PmProgressChart } from './PmProgressChart';
+import { PmSCurveChart } from './PmSCurveChart';
+import { fetchLivePmSchedule } from '../services/googleSheetsService';
+import { RefreshCw, Radio } from 'lucide-react';
 
 interface CharacterDetailProps {
   character: Character;
@@ -44,6 +48,41 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
   const defaultMonth = pmDocs.length > 0 ? pmDocs[pmDocs.length - 1].month : new Date().getMonth() + 1;
   const [pmYear, setPmYear] = useState<number>(defaultYear);
   const [pmMonth, setPmMonth] = useState<number>(defaultMonth);
+
+  // Live Google Sheets Sync state
+  const [liveSchedule, setLiveSchedule] = useState<PmEquipmentEntry[] | null>(null);
+  const [isLiveSyncing, setIsLiveSyncing] = useState<boolean>(false);
+  const [isLiveActive, setIsLiveActive] = useState<boolean>(false);
+  const [lastSyncedTime, setLastSyncedTime] = useState<string | null>(null);
+
+  const syncFromSheets = async (isBackground = false) => {
+    if (!isBackground) setIsLiveSyncing(true);
+    const firstName = character.name.split(' ')[0]; // e.g. "KURDI"
+    const data = await fetchLivePmSchedule(firstName);
+    if (data && data.length > 0) {
+      setLiveSchedule(data);
+      setIsLiveActive(true);
+      setLastSyncedTime(
+        new Date().toLocaleTimeString('id-ID', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+      );
+    }
+    if (!isBackground) setIsLiveSyncing(false);
+  };
+
+  // Auto-fetch on entry + background polling every 20 seconds
+  React.useEffect(() => {
+    if (activeCategory === 'pm') {
+      syncFromSheets(false); // Initial immediate sync
+      const intervalId = setInterval(() => {
+        syncFromSheets(true); // Background silent sync every 20s
+      }, 20000);
+      return () => clearInterval(intervalId);
+    }
+  }, [activeCategory, character.name]);
 
   // Lightbox state for PM document
   const [lightboxDoc, setLightboxDoc] = useState<PmDocument | null>(null);
@@ -227,6 +266,50 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
                 {/* ── PM special view: year/month filter + document viewer ── */}
                 {activeCategory === 'pm' && pmDocs.length > 0 ? (
                   <div className="category-content-body">
+                    <PmProgressChart
+                      pmDocuments={pmDocs}
+                      year={pmYear}
+                      selectedMonth={pmMonth}
+                      onSelectMonth={setPmMonth}
+                    />
+
+                    {/* Live Google Sheets Connection Bar */}
+                    <div className="pm-live-sync-bar">
+                      <div className={`pm-live-status-pill ${isLiveActive ? 'is-active' : ''}`}>
+                        <Radio size={12} className={isLiveActive ? 'live-pulsing' : ''} />
+                        <span>
+                          {isLiveActive
+                            ? 'LIVE AUTO-SYNC (20s): GOOGLE SHEETS ACTIVE'
+                            : 'DATABASE: READY TO SYNC'}
+                        </span>
+                        {lastSyncedTime && (
+                          <span className="pm-live-time-chip">
+                            UPDATED: {lastSyncedTime}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        className={`pm-sync-refresh-btn ${isLiveSyncing ? 'is-spinning' : ''}`}
+                        onClick={() => syncFromSheets(false)}
+                        disabled={isLiveSyncing}
+                        title="Tarik data terbaru dari Google Sheets sekarang"
+                      >
+                        <RefreshCw size={12} className={isLiveSyncing ? 'spin-anim' : ''} />
+                        <span>{isLiveSyncing ? 'SYNCING DATA...' : 'FORCE SYNC'}</span>
+                      </button>
+                    </div>
+
+                    {/* S-Curve cumulative chart for active month */}
+                    {((liveSchedule && liveSchedule.length > 0) || (filteredPmDocs.length > 0 && filteredPmDocs[0].equipmentSchedule && filteredPmDocs[0].equipmentSchedule.length > 0)) && (
+                      <PmSCurveChart
+                        schedule={liveSchedule || filteredPmDocs[0].equipmentSchedule!}
+                        month={pmMonth}
+                        year={pmYear}
+                        monthName={MONTHS[pmMonth - 1]}
+                      />
+                    )}
+
                     {/* Filter row */}
                     <div className="pm-filter-row">
                       {/* Year selector */}

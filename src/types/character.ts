@@ -1,5 +1,23 @@
 export type CategoryKey = 'idea' | 'pm' | 'improvement' | 'safety';
 
+/** A single Kanban task in a PM schedule */
+export interface PmKanbanTask {
+  kanbanType: 'A' | 'B' | 'C' | 'D';
+  planDay: number;       // 1–31
+  actualDay?: number;    // 1–31 (when executed)
+  done: boolean;         // true if executed / green in actual row
+}
+
+/** Schedule entry per equipment in a monthly PM sheet */
+export interface PmEquipmentEntry {
+  no: number;
+  coreEquipment: string;
+  equipmentName: string;
+  area: string;
+  noKanban: string;
+  tasks: PmKanbanTask[];
+}
+
 /** A single PM document entry (monthly schedule image/pdf + metadata) */
 export interface PmDocument {
   id: string;
@@ -10,6 +28,7 @@ export interface PmDocument {
   pdfUrl?: string;
   status: 'COMPLETED' | 'IN_PROGRESS' | 'PLANNED';
   notes?: string;
+  equipmentSchedule?: PmEquipmentEntry[];
 }
 
 export interface CategoryData {

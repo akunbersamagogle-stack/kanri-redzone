@@ -429,7 +429,207 @@ export const INITIAL_CHARACTERS: Character[] = [
             imageUrl: '/assets/documents/pm_c05_2026_08.png',
             pdfUrl: '/assets/documents/pm_c05_2026_08.pdf',
             status: 'COMPLETED',
-            notes: 'PIC: Kurdi K. | TL: Tekatno | Area: Shell Body'
+            notes: 'PIC: Kurdi K. | TL: Tekatno | Area: Shell Body',
+            equipmentSchedule: [
+              {
+                no: 1,
+                coreEquipment: 'Robot Matehan BX',
+                equipmentName: 'HDR2-1',
+                area: 'SB ENGINE HOOD',
+                noKanban: 'R161-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 3, actualDay: 3, done: true },
+                  { kanbanType: 'C', planDay: 23, done: false }
+                ]
+              },
+              {
+                no: 2,
+                coreEquipment: 'Robot Matehan BX',
+                equipmentName: 'BDH2-1',
+                area: 'SB BACK DOOR',
+                noKanban: 'R163-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 4, actualDay: 4, done: true },
+                  { kanbanType: 'C', planDay: 23, done: false }
+                ]
+              },
+              {
+                no: 3,
+                coreEquipment: 'Robot Sealer BX',
+                equipmentName: 'HDR 1-1',
+                area: 'SB ENGINE HOOD',
+                noKanban: 'R167-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 5, actualDay: 5, done: true }
+                ]
+              },
+              {
+                no: 4,
+                coreEquipment: 'Robot Roller BX',
+                equipmentName: 'HDR 3-2',
+                area: 'SB ENGINE HOOD',
+                noKanban: 'R180-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 6, actualDay: 6, done: true }
+                ]
+              },
+              {
+                no: 5,
+                coreEquipment: 'Robot Roller BX',
+                equipmentName: 'HDR 3-4',
+                area: 'SB ENGINE HOOD',
+                noKanban: 'R182-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 7, done: false }
+                ]
+              },
+              {
+                no: 6,
+                coreEquipment: 'Robot Roller BX',
+                equipmentName: 'BDH 3-2',
+                area: 'SB BACK DOOR',
+                noKanban: 'R184-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 10, done: false }
+                ]
+              },
+              {
+                no: 7,
+                coreEquipment: 'Robot Roller BX',
+                equipmentName: 'BDH 3-4',
+                area: 'SB BACK DOOR',
+                noKanban: 'R186-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 11, done: false }
+                ]
+              },
+              {
+                no: 8,
+                coreEquipment: 'Hemming Machine',
+                equipmentName: 'FR DOOR LH D26A',
+                area: 'SB FD LH D26A',
+                noKanban: 'H005-000-A',
+                tasks: [
+                  { kanbanType: 'A', planDay: 12, done: false }
+                ]
+              },
+              {
+                no: 9,
+                coreEquipment: 'Hemming Machine',
+                equipmentName: 'RR DOOR RH D26A',
+                area: 'SB RD RH D26A',
+                noKanban: 'H006-000-A',
+                tasks: [
+                  { kanbanType: 'A', planDay: 13, done: false }
+                ]
+              },
+              {
+                no: 10,
+                coreEquipment: 'Hemming Machine',
+                equipmentName: 'FR DOOR RH D03B',
+                area: 'SB FD RH D03B',
+                noKanban: 'H014-000-A',
+                tasks: [
+                  { kanbanType: 'A', planDay: 14, done: false }
+                ]
+              },
+              {
+                no: 11,
+                coreEquipment: 'Hemming Machine',
+                equipmentName: 'RR DOOR RH D03B',
+                area: 'SB RD RH D03B',
+                noKanban: 'H016-000-A',
+                tasks: [
+                  { kanbanType: 'A', planDay: 18, done: false }
+                ]
+              },
+              {
+                no: 12,
+                coreEquipment: 'Loader',
+                equipmentName: 'LOADING CONVEYOR',
+                area: 'SBF',
+                noKanban: 'G025-000',
+                tasks: [
+                  { kanbanType: 'B', planDay: 1, actualDay: 1, done: true },
+                  { kanbanType: 'A', planDay: 19, done: false }
+                ]
+              },
+              {
+                no: 13,
+                coreEquipment: 'Running Fork',
+                equipmentName: 'RUNNING FORK',
+                area: 'SBF',
+                noKanban: 'G027-000',
+                tasks: [
+                  { kanbanType: 'B', planDay: 8, actualDay: 8, done: true },
+                  { kanbanType: 'A', planDay: 20, done: false }
+                ]
+              },
+              {
+                no: 14,
+                coreEquipment: 'Lifter Pneumatic',
+                equipmentName: 'LIFTER TOSHO',
+                area: 'SBF',
+                noKanban: 'G029-000',
+                tasks: [
+                  { kanbanType: 'B', planDay: 8, actualDay: 8, done: true },
+                  { kanbanType: 'A', planDay: 21, done: false }
+                ]
+              },
+              {
+                no: 15,
+                coreEquipment: 'Jig PLC',
+                equipmentName: 'ROLLER HEMMING HOOD',
+                area: 'SB ENGINE HOOD',
+                noKanban: 'J233-000',
+                tasks: [
+                  { kanbanType: 'B', planDay: 15, actualDay: 15, done: true },
+                  { kanbanType: 'A', planDay: 24, done: false }
+                ]
+              },
+              {
+                no: 16,
+                coreEquipment: 'Servo Dies',
+                equipmentName: 'HOOD SERVO',
+                area: 'SB ENGINE HOOD',
+                noKanban: 'R190-000',
+                tasks: [
+                  { kanbanType: 'B', planDay: 15, done: false },
+                  { kanbanType: 'A', planDay: 27, done: false }
+                ]
+              },
+              {
+                no: 17,
+                coreEquipment: 'Jig PLC',
+                equipmentName: 'UFA#2 D37',
+                area: 'UBF',
+                noKanban: 'J237-000',
+                tasks: [
+                  { kanbanType: 'B', planDay: 22, done: false },
+                  { kanbanType: 'A', planDay: 28, done: false }
+                ]
+              },
+              {
+                no: 18,
+                coreEquipment: 'Jig PLC',
+                equipmentName: 'UFA#4 D38',
+                area: 'UBF',
+                noKanban: 'J238-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 29, done: false }
+                ]
+              },
+              {
+                no: 19,
+                coreEquipment: 'Hanger',
+                equipmentName: 'HANGER #4',
+                area: 'UBF',
+                noKanban: 'H004-000',
+                tasks: [
+                  { kanbanType: 'A', planDay: 31, done: false }
+                ]
+              }
+            ]
           }
         ]
 
