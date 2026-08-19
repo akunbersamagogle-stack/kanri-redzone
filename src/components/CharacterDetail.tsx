@@ -49,6 +49,9 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
   const [lightboxDoc, setLightboxDoc] = useState<PmDocument | null>(null);
   const [viewMode, setViewMode] = useState<'pdf' | 'image'>('pdf');
 
+  // Spotlight video playback state for expand menu
+  const [spotlightVideoReady, setSpotlightVideoReady] = useState(false);
+
   const categoriesConfig: Array<{
     key: CategoryKey;
     icon: React.ReactNode;
@@ -100,13 +103,48 @@ export const CharacterDetail: React.FC<CharacterDetailProps> = ({
           {/* Left Column: Character Spotlight */}
           <aside className="detail-character-spotlight">
             <div className="spotlight-card">
+              {/* Character Video Auto-Play in Expand Menu */}
+              <video
+                key={character.id}
+                autoPlay
+                loop
+                muted
+                playsInline
+                onCanPlay={() => setSpotlightVideoReady(true)}
+                onError={() => setSpotlightVideoReady(false)}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 20%',
+                  zIndex: 1,
+                  pointerEvents: 'none',
+                  opacity: spotlightVideoReady ? 1 : 0,
+                  transition: 'opacity 0.7s ease-in-out',
+                }}
+              >
+                <source src={`/assets/characters/${character.id}.mp4`} type="video/mp4" />
+              </video>
+
+              {/* Base Photo Fallback Layer */}
               <img
                 src={character.image}
                 alt={character.name}
                 className="spotlight-photo"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center 20%',
+                  zIndex: 0,
+                }}
               />
-              <div className="spotlight-overlay" />
-              <div className="spotlight-info-wrap">
+              <div className="spotlight-overlay" style={{ zIndex: 2 }} />
+              <div className="spotlight-info-wrap" style={{ zIndex: 3 }}>
                 <span className="spotlight-division">
                   {character.department} • {character.unit}
                 </span>
